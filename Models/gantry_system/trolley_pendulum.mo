@@ -13,8 +13,8 @@ model trolley_pendulum
   parameter Mass m=200 "Mass of pendulum bob/container";
   parameter Mass M=10 "Mass of trolley/cart";
   parameter Length r=1 "Length of the rope connecting the pendulum bob to the trolley";
-  parameter Damping d_p=0.5 "Damping factor swinging of pendulum";
-  parameter Damping d_c=2 "Damping factor for motion of cart";
+  parameter Damping d_p=0.05 "Damping factor swinging of pendulum";
+  parameter Damping d_c=4.79 "Damping factor for motion of cart";
   parameter Acceleration g=9.8 "Constant for gravitational acceleration on the surface of the Earth (not Newton's gravitational constant!!)";
   
   // Variables
