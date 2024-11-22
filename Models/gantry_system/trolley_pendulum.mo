@@ -8,7 +8,7 @@ model trolley_pendulum
   type Mass = Real(unit="kg", min=0);
   type Damping = Real;
   type Acceleration = Real(unit="m/s2");
-  type ControlSignal = Integer;
+  type ControlSignal = Real;
 
   parameter Mass m=200 "Mass of pendulum bob/container";
   parameter Mass M=10 "Mass of trolley/cart";
@@ -29,6 +29,7 @@ initial equation
   v = 0;
   theta = 0;
   omega = 0;
+
 equation
   der(x) = v;
   der(theta) = omega;
