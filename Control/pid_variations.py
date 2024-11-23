@@ -16,7 +16,7 @@ from simulate import readMat
 if platform.system() == 'Darwin':
     from animation import animate_gantry_system
 
-def run_simulation(k_p, k_i, k_d):
+def run_control_simulation(k_p, k_i, k_d):
     simulation_cmd='./control_loop -override pid.k_p='+str(k_p)+',pid.k_i='+str(k_i)+',pid.k_d='+str(k_d)
 
     os.chdir('../../generatedCode/gantry_system.control_loop/')
@@ -30,7 +30,7 @@ k_p = 10
 k_i = 20
 k_d = 5
 
-[name, data] = run_simulation(k_p, k_i, k_d)
+[name, data] = run_control_simulation(k_p, k_i, k_d)
 
 # process.theta = data[4]
 # process.x_output = data[16]

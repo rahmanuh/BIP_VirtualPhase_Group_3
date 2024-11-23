@@ -5,7 +5,7 @@ import os
 
 from simulate import readMat
 
-def run_simulation(d_p):
+def run_exp2_simulation(d_p):
     simulation_cmd='./exp_2_calib_damp_p -override m=0.2,r=0.1,d_p='+str(d_p)+',g=9.8'
 
     os.chdir('../../generatedCode/gantry_system.exp_2_calib_damp_p/')
@@ -53,7 +53,7 @@ x_simul_pos = []
 sse_results = []
 
 #for num in d_p_range:
-#    [name, simul_data] = run_simulation(num)
+#    [name, simul_data] = run_exp2_simulation(num)
 #    #x_simul_pos.append([num, simul_data[2]])
 #    sse_results.append([simul_data[5], calculate_sum_of_squared_error(x_real_pos[-5002:], simul_data[2])])
 #    #sse_results.append(calculate_sum_of_squared_error(x_real_pos[-5002:], simul_data[2]))
@@ -64,7 +64,7 @@ sse_results = []
 #print(sse_results)
 
 # From the calibration, we got d_p = 0.05 with the smallest sse = 45.72760109141336
-[name, simul_data] = run_simulation(0.05)
+[name, simul_data] = run_exp2_simulation(0.05)
 
 plot_real_life_calib_data(real_data)
 plot_simul_data(simul_data)
