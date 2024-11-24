@@ -1,11 +1,11 @@
 within gantry_system;
 
 model control_loop
-  pid_block pid(k_p = 3, k_i = 2, k_d = 0)  annotation(
+  pid_block pid(k_p = 17, k_i = 0, k_d = 40)  annotation(
     Placement(transformation(origin = {-10, 16}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Math.Add subs(k2 = -1)  annotation(
     Placement(transformation(origin = {-52, 16}, extent = {{-10, -10}, {10, 10}})));
-  Modelica.Blocks.Sources.Constant r(k = 20)  annotation(
+  Modelica.Blocks.Sources.Constant r(k = 10)  annotation(
     Placement(transformation(origin = {-88, 32}, extent = {{-10, -10}, {10, 10}})));
   plant process annotation(
     Placement(transformation(origin = {32, 16}, extent = {{-10, -10}, {10, 10}})));

@@ -22,6 +22,7 @@ def calculate_cost(max_theta, t_task):
     return (a * rad_to_deg(max_theta)) + (b * t_task)
 
 def run_control_simulation(k_p, k_i, k_d):
+    # Run simulation for 120 seconds with 0.004 sec interval
     simulation_cmd='./control_loop -override pid.k_p='+str(k_p)+',pid.k_i='+str(k_i)+',pid.k_d='+str(k_d)
 
     os.chdir('../../generatedCode/gantry_system.control_loop/')
@@ -40,13 +41,15 @@ def run_control_simulation(k_p, k_i, k_d):
     suff_theta_rad = deg_to_rad(10) # pendulum sufficiently positioned if theta < 10 degree
 
     stable_theta = thetas[-1]
-    theta_idx = 0
+    stable_theta_idx = len(thetas)
     t_task_idx = 0
 
-    # look for theta
-    for i, theta in enumerate(reversed(thetas)):
-        if abs(stable_theta - theta) < suff_theta_rad:
-            theta_idx = i
+    # look for earliset stable theta, we traverse from the back
+    # this way we can automatically discard > 30 deg theta
+    for i, theta in reversed(list(enumerate(thetas))):
+        if abs(stable_theta - theta) > suff_theta_rad:
+            stable_theta_idx = i
+            #print('theta', i)
             break
 
     # look for t_task
@@ -56,10 +59,11 @@ def run_control_simulation(k_p, k_i, k_d):
     for i, x_output in enumerate(x_outputs):
         if (x_output >= x_lower_bound) and (x_output <= x_upper_bound):
             t_task_idx = i
+            #print('t_task', i)
             break
 
-    if t_task_idx < theta_idx:
-        t_task_idx = theta_idx
+    if t_task_idx < stable_theta_idx:
+        t_task_idx = stable_theta_idx
 
     max_theta = thetas[t_task_idx]
     t_task = t_tasks[t_task_idx]
@@ -69,7 +73,7 @@ def run_control_simulation(k_p, k_i, k_d):
     if cost < lowest_cost:
         lowest_cost = cost
         print(lowest_cost, theta, t_task, k_p, k_d)
-        return [lowest_cost, theta, t_task, x_outputs, k_p, k_d]
+        return lowest_cost, theta, t_task, k_p, k_d
 
 
 if __name__ == "__main__":
@@ -77,6 +81,31 @@ if __name__ == "__main__":
     k_p = range(1, 41, 1)
     k_d = range(10, 501, 10)
 
+    lowest_cost_res = []
+    theta_res = []
+    t_task_res = []
+    kp_res = []
+    kd_res = []
+
     for i in k_p:
         for j in k_d:
-            run_control_simulation(i, k_i, j)
+            lowest_cost, theta, t_task, kp, kd = run_control_simulation(i, k_i, j)
+            lowest_cost_res.append(lowest_cost)
+            theta_res.append(theta)
+            t_task_res.append(t_task)
+            kp_res.append(kp)
+            kd_res.append(kd)
+
+    simul_data_res = {
+        'lowest_cost' : lowest_cost_res,
+        'theta' : theta_res,
+        't_task' : t_task_res,
+        'k_p' : kp_res,
+        'k_d' : kd_res
+    }
+
+    df = pd.DataFrame(simul_data_res)
+    df.to_csv('simul_data_res.csv')
+
+    sorted_df = df.sort_values(by='lowest_cost')
+    print(sorted_df.head)
